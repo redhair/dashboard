@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+  <div class="col-xs-5">
+    <h1>Register New Account</h1>
+  </div>
+</div>
+<form id="registerForm" name="form" style="width: 35%; margin: auto;" ng-submit="register()" novalidate>
+  <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.email.$invalid }">
+      <label for="email">Email</label>
+      <input id="email" type="text" name="email" class="form-control" ng-model="email" required />
+      <div ng-messages="form.$submitted && form.email.$error" class="help-block danger">
+          <div ng-message="required">Email is required</div>
+      </div>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.password.$invalid }">
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" class="form-control" ng-model="password" required />
+      <div ng-messages="form.$submitted && form.password.$error" class="help-block danger">
+          <div ng-message="required">Password is required</div>
+      </div>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.confirmPassword.$invalid }">
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" type="password" name="confirmPassword" class="form-control" ng-model="confirmPassword" required />
+      <div ng-messages="form.$submitted && form.confirmPassword.$error" class="help-block danger">
+          <div ng-message="required">Password confirmation is required</div>
+      </div>
+  </div>
+  <div class="form-group">
+      <button type="submit" ng-disabled="loading" class="btn btn--primary">Register</button>
+      <img ng-if="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+  </div>
+  <div ng-if="error" class="flash flash--danger">{{error}}</div>
+</form>

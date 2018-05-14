@@ -1,0 +1,19 @@
+<div class="modal fade" id="promptDelete" tabindex="-1" role="dialog" aria-labelledby="promptDelete" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="promptDelete">Are You Sure?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Please make sure this is really what you want to do. <b>This cannot be undone.</b>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn--secondary" data-dismiss="modal">Go Back</button>
+        <button ng-click="deleteOrganization(slug_id)" type="button" class="btn btn--danger" >Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

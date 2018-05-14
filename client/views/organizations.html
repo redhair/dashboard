@@ -1,0 +1,37 @@
+<div ng-include="'partials/header.html'"></div>
+<div ng-include="'partials/sidebar.html'"></div>
+
+<div class="row equal innerContent">
+	<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+		<a href="/organizations/new" class="card create-new">
+			<h1>
+				<span class="fa-stack fa-lg" style="-webkit-text-stroke: 3px white;">
+				    <i class="fa fa-circle-thin fa-stack-2x"></i>
+				    <i style="line-height: 88px;" class="fa fa-plus fa-stack-1x"></i>
+				</span>
+			</h1>
+		</a>
+	</div>
+	<div ng-repeat='org in organizations' class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+		<div class='card clickable' ng-click="getCategories(this.org, $event)">
+			<div back-img="{{org.image}}" class='card__image'></div>
+	        <div class='card__description'>
+				<div style="margin: 0; height: 50%;" class='card__title'>
+					<span><h5>{{org.organization_name}}</h5></span>
+				</div>
+				<div class="card__buttons">
+					<div style="display: flex;">
+						<input id="toggle_{{$index}}" type="checkbox" ng-checked="org.active" ng-click="toggleActive(this.org);$event.stopPropagation()">
+						<label style="display: flex; margin-left: 0;" for="toggle_{{$index}}" class="switch" ng-click=""></label>
+					</div>
+
+					<!--<a href="/organizations/{{org.slug_id}}/categories"><button class='btn btn--primary'>View</button></a>-->
+					<button ng-click="goTo('/organizations/' + org.slug_id + '/settings');$event.stopPropagation()" class='btn btn--secondary fa fa-cog'></button>
+				</div>
+	        </div>
+	        <button class="btn btn--primary copy-url" ng-click="copyUrl($event);$event.stopPropagation()" style="box-shadow: none;">
+	        	Copy URL&nbsp;<span class="copied-msg"><i class="fa fa-check"></i></span>
+	        </button>
+        </div>
+	</div>
+</div>

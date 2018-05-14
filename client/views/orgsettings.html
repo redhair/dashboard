@@ -1,0 +1,48 @@
+<div ng-include="'partials/header.html'"></div>
+<div ng-include="'partials/sidebar.html'"></div>
+
+<div class="row innerContent">
+	<form id="edit_organization" class="card col-sm-6" style="margin: 10px auto">
+		<div class="form-group" style="margin-top: 10px">
+			<div class="mb-4">
+				<label for="name"><h5>Organization Name</h5></label>
+				<br>
+				<input id="name" class="form-control" type="text" ng-model="org[0].organization_name">
+			</div>
+			<div class="mb-4">
+				<label for="name"><h5>Colors</h5></label>
+	      		<div class="input-group">
+	        		<div class="input-group-prepend">
+	          			<span style="margin-top: 5px;" class="input-group-text">
+	          				<input id="primary_color_selection" type="color" ng-model="org[0].primary_color" required>
+	          			</span>
+	        		</div>
+	        		<input style="margin-right: 10px;" type="text" class="form-control" id="primary_color" placeholder="Primary Color" ng-model="org[0].primary_color" required>
+	        		<div class="input-group-prepend">
+	          			<span style="margin-top: 5px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;" class="input-group-text">
+	          				<input id="secondary_color_selection" type="color" ng-model="org[0].secondary_color" required>
+	          			</span>
+	        		</div>
+	        		<input type="text" class="form-control" id="secondary_color" placeholder="Secondary Color" ng-model="org[0].secondary_color" required>
+	      		</div>
+			</div>
+			<!--
+			<div class="mb-4">
+				<label for="description"><h5>Description</h5></label>
+				<textarea id="description" class="form-control" rows="5"></textarea>
+			</div>
+			-->
+		</div>
+		<div class="form-group">
+			<div class="custom-file">
+			   <input id="logo_image" type="file" class="custom-file-input">
+			   <label for="logo_image" class="custom-file-label">Select A New Logo File...</label>
+			</div>
+		</div>
+		<button ng-click="updateOrganization(slug_id)" class="btn btn--success" style="width: 100%;">Update Organization</button>
+		<hr>
+		<h5>Delete Organization</h5>
+		<button class="btn btn--danger" style="width: 100%;" data-toggle="modal" data-target="#promptDelete">Delete Organization</button>
+	</form>
+</div>
+<div ng-include="'partials/promptDelete.html'"></div>

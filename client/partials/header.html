@@ -1,0 +1,17 @@
+<div class="card row header">
+	<button ng-if="backButton" style="border-radius:200px;height:50px;width:50px;background:white;padding:10px;font-size:1.1em;" class="fa fa-arrow-left btn btn--secondary" ng-click="handleBackButton()"></button>
+	<h2>{{title}}</h2>
+	<button id="menu" style="border-radius:200px;height:50px;width:50px;background:white;padding:10px;font-size:1.3em;" class="fa fa-user-circle btn btn--secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+	<div class="dropdown-menu" style="border: 0; box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);">
+		<h5 class="dropdown-header">Menu</h5>
+		<div class="dropdown-divider"></div>
+		<a class="dropdown-item" href="#" data-toggle="modal" data-target="#promptTheme">Themes</a>
+		<a class="dropdown-item" href="#">About</a>
+		<div class="dropdown-divider"></div>
+		<a class="dropdown-item" href="/login">
+			Logout
+		</a>
+	</div>
+</div>
+<div ng-include="'partials/promptTheme.html'"></div>
+<div ng-include="'partials/promptLeave.html'"></div>

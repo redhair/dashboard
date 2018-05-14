@@ -1,0 +1,361 @@
+@charset "UTF-8";
+
+$primary-color: #6991da;
+$secondary-color: rgb(238, 238, 238);
+$success-color: #3acc93;
+$danger-color: rgb(246, 119, 119);
+$warning-color: rgb(255, 235, 148);
+$white: #FFFFFF;
+
+$body-font: "FaktSoftPro", sans-serif;
+$header-font: "Lato", sans-serif;
+$font-size: 1rem;
+
+$button-padding: ($font-size * 0.5) ($font-size * 0.625);
+$button-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+$button-shadow-depressed: 0 0 0 0.5px rgba(50,50,93,.15), 0 2px 5px 0 rgba(50,50,93,.08), 0 1px 1.5px 0 rgba(0,0,0,.05), 0 1px 2px 0 rgba(0,0,0,.06), 0 0 0 0 transparent;
+$card-shadow: 0 7px 14px 0 rgba(50,50,93,.1), 0 3px 6px 0 rgba(0,0,0,.07);
+
+$card-color: #fff !default;
+
+$flash-padding: 15px;
+$flash-margin: 10px 0;
+
+$background-color: #f9f9f9 !default;
+$background-text-color: #202b33 !default;
+
+body {
+  font-size: $font-size;
+  font-family: $body-font;
+  background-color: $background-color;
+  color: $background-text-color;
+}
+
+a {
+  margin: 20px 0;
+  text-decoration: none;
+  cursor: pointer;
+  color: $primary-color;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  color: darken($primary-color, 20%);
+}
+
+a:focus {
+  border: 1px dotted $primary-color;
+}
+
+p {
+  margin: 10px 0;
+}
+
+h1 {
+  font-family: $header-font;
+  margin: 1.3rem 0;
+  font-size: $font-size * 2;
+  font-weight: 900;
+}
+
+h2 {
+  font-family: $header-font;
+  margin: 1rem 0;
+  font-size: $font-size * 1.8;
+  font-weight: 900;
+}
+
+h3 {
+  font-family: $header-font;
+  margin: 0.7rem 0;
+  font-size: $font-size * 1.6;
+  font-weight: 900;
+}
+
+h4 {
+  font-family: $header-font;
+  margin: 0.6rem 0;
+  font-size: $font-size * 1.4;
+  font-weight: 900;
+}
+
+h5 {
+  font-family: $header-font;
+  margin: 0.5rem 0;
+  font-size: $font-size * 1.2;
+  font-weight: 900;
+}
+
+input[type=text],
+input[type=password],
+input[type=email] {
+  font-family: $body-font;
+  color: #202b33;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 5px 0;
+  border-radius: 5px;
+  padding: 8px;
+  border: 0;
+  box-shadow: 0 0 0 0.5px rgba(49,49,93,.03), 0 2px 5px 0 rgba(49,49,93,.1), 0 1px 2px 0 rgba(0,0,0,.08);
+  outline: 0;
+}
+
+input[type=text]::placeholder,
+input[type=password]::placeholder,
+input[type=email]::placeholder {
+  color: #bbb6b6;
+}
+
+input[type=text].input-error,
+input[type=password].input-error,
+input[type=email].input-error {
+  border: 1px solid $danger-color;
+}
+
+input[type=text].input-error:focus,
+input[type=password].input-error:focus,
+input[type=email].input-error:focus {
+    outline-color: $danger-color;
+    outline-style: auto;
+    outline-width: 5px;
+}
+
+input[type=text]:disabled,
+input[type=password]:disabled,
+input[type=email]:disabled {
+  background-color: $secondary-color;
+  border-color: darken($secondary-color, 10%);
+  color: #8da4b5;
+  cursor: default;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
+  border: 0 !important;
+  background-color: $secondary-color;
+  color: #666;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+}
+
+.select-wrapper {
+  color: #666;
+  position: relative;
+  display: block;
+  background-color: $secondary-color;
+  font-weight: bolder;
+  overflow: hidden;
+  border-radius: 5px;
+  margin: 10px 0;
+  border-right: 1px solid darken($secondary-color, 15%);
+  border-bottom: 1px solid darken($secondary-color, 15%);
+  box-shadow: $button-shadow;
+}
+
+.select-wrapper::after {
+  font-family: "FontAwesome";
+  content: '\f107';
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  background-color: $secondary-color;
+  pointer-events: none;
+  border-left: 1px solid darken($secondary-color, 15%);
+  padding-left: 10px;
+  padding-top: 4px;
+  height: 100%;
+}
+
+.btn {
+  display: inline-block;
+  outline: 0;
+  padding: $button-padding;
+  border-radius: 5px;
+  border: 0;
+  margin: 10px 0;
+  box-shadow: $button-shadow;
+  cursor: pointer;
+}
+
+.btn + .btn {
+  margin-left: 5px;
+}
+
+.btn:disabled {
+  background-color: desaturate($secondary-color, 20%);
+  color: #8898aa;
+  border-color: #dfdfdf;
+  cursor: default;
+}
+
+.btn:active {
+  box-shadow: $button-shadow-depressed;
+  border: 0;
+}
+
+.btn--primary {
+  color: rgb(242, 242, 242);
+  background-color: $primary-color;
+}
+
+.btn--primary:active {
+  background-color: darken($primary-color, 5%);
+}
+
+.btn--secondary {
+  color: #666;
+  background-color: $secondary-color;
+}
+
+.btn--secondary:active {
+  background-color: darken($secondary-color, 5%);
+}
+
+.btn--success {
+  color: rgb(242, 242, 242);
+  background-color: $success-color;
+}
+
+.btn--success:active {
+  background-color: darken($success-color, 5%);
+}
+
+.btn--danger {
+  color: rgb(242, 242, 242);
+  background-color: $danger-color;
+}
+
+.btn--danger:active {
+  background-color: darken(desaturate($danger-color, 15%), 7%);
+}
+
+.card {
+  background-color: $card-color;
+  border-color: $secondary-color;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px 0;
+  box-shadow: $card-shadow;
+  border-radius: 5px;
+}
+
+.card + .card {
+  margin-left: 10px;
+}
+
+.card--white {
+  background-color: $background-color;
+  color: $background-text-color;
+}
+
+.card--light {
+  background-color: darken($background-color, 10%);
+  color: $background-text-color;
+}
+
+.card--dark {
+  background-color: darken($background-color, 66%);
+  color: lighten($background-text-color, 80%);
+}
+
+.card--black {
+  background-color: darken($background-color, 80%);
+  color: lighten($background-text-color, 90%);
+}
+
+.card__image {
+  background-image: url('../img/placeholder.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 75px;
+  width: 100%;
+}
+
+.card__title {
+  font-family: $header-font;
+  font-weight: bolder;
+  margin: 0 0 8px 0;
+}
+
+.card__description {
+  padding: $button-padding;
+  font-family: $body-font;
+}
+
+.card__description > button {
+  display: block;
+}
+
+.error-message {
+  padding-left: 5px;
+  color: $danger-color;
+  font-size: $font-size * 0.8;
+  font-weight: bolder;
+}
+
+.error-message::before {
+  font-family: "FontAwesome";
+  content: '\f06a' + ' ';
+}
+
+.flash {
+  color: $background-text-color;
+  border-radius: 3px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: $flash-padding;
+  margin: $flash-margin;
+}
+
+.flash--info {
+  background-color: lighten($primary-color, 25%);
+}
+
+.flash--info::before {
+  font-family: "FontAwesome";
+  content: '\f05a';
+  padding-right: 10px;
+  color: darken($primary-color, 20%);
+}
+
+.flash--warning {
+  background-color: lighten($warning-color, 10%);
+}
+
+.flash--warning::before {
+  font-family: "FontAwesome";
+  content: '\f06a';
+  padding-right: 10px;
+  color: darken($warning-color, 20%);
+}
+
+.flash--success {
+  background-color: lighten($success-color, 30%);
+}
+
+.flash--success::before {
+  font-family: "FontAwesome";
+  content: '\f058';
+  padding-right: 10px;
+  color: darken($success-color, 20%);
+}
+
+.flash--danger {
+  background-color: lighten($danger-color, 20%);
+}
+
+.flash--danger::before {
+  font-family: "FontAwesome";
+  content: '\f071';
+  padding-right: 10px;
+  color: darken($danger-color, 20%);
+}
