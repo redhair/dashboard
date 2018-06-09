@@ -7,7 +7,6 @@
     $scope.title = "Organizations";
     $scope.backButton = true;
     
-    console.log(action)
     if (action === 'new') {
       $scope.title = "New Organization";
       $scope.createNew = true;
@@ -57,13 +56,11 @@
 
 
     function getAllOrganizations() {
-      console.log("getting all orgs")
       return Organization.query();
     }
 
     function getSingleOrganization(slug_id) {
       return Organization.get({ slug_id: slug_id }, function(org) {
-        console.log(org)
         $scope.title = org[0].organization_name + " Settings";
       });
     }
@@ -83,9 +80,6 @@
       if (file) {
         $('.overlay').fadeIn(800);
         Organization.upload(function(data) {
-          console.log("got signed url:");
-          console.log(data.url);
-          console.log("attempting to put file on s3")
 
           fetch(data.url, {
             'method': 'PUT',
@@ -94,14 +88,9 @@
               'Content-Type': file.type
             }
           }).then(function(response) {
-            console.log(response);
-            console.log("file sent to s3 successfully")
-            console.log("attempting to add org image")
             orgConfig.image = 'https://my-advanced-node-blog.s3.amazonaws.com/' + data.key;
 
             Organization.save(orgConfig, function(res) {
-              console.log("successfully saved img?")
-              console.log(res)
               $location.url('/organizations');
             });
           });
@@ -128,35 +117,25 @@
       if (file) {
         $('.overlay').fadeIn(800);
         Organization.upload(function(data) {
-          console.log("got signed url:");
-          console.log(data.url);
-          console.log("attempting to put file on s3")
-
           orgConfig.image = 'https://my-advanced-node-blog.s3.amazonaws.com/' + data.key;
 
           fetch(data.url, {
-            'method': 'PUT',
-            'body': file,
-            'headers': {
-              'Content-Type': file.type
+            method: 'PUT',
+            body: file,
+            headers: {
+              Content-Type: file.type
             }
           }).then(function(response) {
-            console.log(response);
-            console.log("file sent to s3 successfully")
-            console.log("attempting to add org image")
-
             Organization.update({
-              'slug_id': params.slug_id
+              slug_id: params.slug_id
             }, orgConfig, function(res) {
-              console.log("successfully saved img?")
-              console.log(res)
               $location.url('/organizations');
             });
           });
         });
       } else {
         Organization.update({
-          'slug_id': params.slug_id
+          slug_id: params.slug_id
         }, orgConfig, function(msg) {
           $location.url('/organizations');
         });
@@ -175,8 +154,6 @@
     }
 
     $scope.getCategories = function getCategories(org, $event) {
-      console.log($event.target.className)
-
       if ($event.target.className.includes("btn") ||
           $event.target.className.includes("switch")) {
         event.stopPropagation();
@@ -197,9 +174,7 @@
       }, {
         'active': org.active,
         'id': org.organization_id
-      }, function(res) {
-        console.log(res);
-      });
+      }, function(res) {});
     }
 
     function slugify(string) {

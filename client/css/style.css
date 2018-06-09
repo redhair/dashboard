@@ -425,3 +425,14 @@ h6 {
 	width: 33%;
 	margin: 10px 10px 0 0;
 }
+
+@media only screen and (max-width: 768px) {
+	.sidebar {
+		display: none;
+	}
+
+	.innerContent {
+		padding-right: 50px;
+		padding-left: 50px;
+	}
+}

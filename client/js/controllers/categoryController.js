@@ -21,7 +21,6 @@
       var category = decodeURIComponent($scope.pathname.split("/")[3]);
       $scope.category = getSingleCategory(category);
       $scope.handleBackButton = function() {
-        console.log($scope.slug_id);
         $location.url('/organizations/' + $scope.slug_id + '/categories');
       }
     } else if (action === 'new') {
@@ -33,7 +32,6 @@
     }
 
     function getAllCategories() {
-      console.log("in")
       return Category.query({
         slug_id: $scope.slug_id 
       });
@@ -44,7 +42,6 @@
         slug_id: $scope.slug_id,
         category: category
       }, function(res) {
-        //console.log(res)
         $scope.category = res[0];
       });
     }
@@ -53,10 +50,6 @@
       var newCatForm = $('#new_popshop');
       var catName = newCatForm.find('#name').val();
       var description = newCatForm.find('#description').val();
-
-      //send logo file to S3 server, then store that url in logo variable
-      //var logo = newOrgForm.find('#logo_image').val();
-      console.log(description);
 
       var catConfig = {
         "name": catName,
@@ -76,22 +69,16 @@
       var catName = catForm.find('#name').val();
       var description = catForm.find('#description').val();
 
-      console.log($scope.category)
-
       var catConfig = {
         name: catName,
         id: $scope.category.category_id
       };
 
-      console.log("updating cat:")
-      console.log(catConfig)
-
       Category.update({
         slug_id: $scope.slug_id
       }, catConfig, function(msg) {
-        console.log(msg)
         $location.url('/organizations/' + $scope.slug_id + '/categories');
-      })
+      });
     }
 
     $scope.deleteResource = function deleteResource() {
@@ -99,9 +86,6 @@
         var deleteConfig = {
           'name': $scope.category.category_name
         };
-
-        console.log($scope.slug_id)
-        console.log(deleteConfig)
 
         /*
         Category.delete({
@@ -114,9 +98,11 @@
 
         $http({
           method: 'DELETE',
-          url: 'http://206.189.176.175/api/organizations/' + $scope.slug_id + '/categories',
+          url: 'http://dashboard.foresightiot.com/api/organizations/' + $scope.slug_id + '/categories',
           data: deleteConfig,
-          headers: {'Content-Type': 'application/json'}
+          headers: {
+            Content-Type: 'application/json'
+          }
         }).then(function() {
           $location.url('/organizations/' + $scope.slug_id + '/categories');
         });
@@ -130,8 +116,6 @@
     }
 
     $scope.getProducts = function getProducts(cat, $event) {
-      console.log($event.target.className)
-
       if ($event.target.className.includes("btn") ||
           $event.target.className.includes("switch")) {
         event.stopPropagation();

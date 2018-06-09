@@ -3,7 +3,6 @@
 
   Dashboard.controller('productController', ['$scope', '$location', '$route', 'Product', function($scope, $location, $route, Product) {
     const params = $route.current.params;
-    console.log(params);
     const action = getAction();
     $scope.title = "Products";
     $scope.backButton = true;
@@ -11,8 +10,6 @@
     $scope.category_id = params.category;
     $scope.product_id = params.product;
 
-    console.log("controller: prods");
-    console.log("action: " + action);
     if (action === 'settings') {
       $scope.title = "Product Settings";
       $scope.product = getSingleProduct();
@@ -47,18 +44,14 @@
     }
 
     function getAllProducts() {
-      return Product.all(function() {
-        console.log($scope.products)
-      });
+      return Product.all(function() {});
     }
 
     function getOrgProducts() {
       return Product.query({
         slug_id: $scope.slug_id,
         category: $scope.category_id
-      }, function() {
-        console.log($scope.products)
-      });
+      }, function() {});
     }
 
     function getSingleProduct() {
@@ -68,58 +61,47 @@
         product: $scope.product_id
       }, function(product) {
         $scope.product = product[0];
-        console.log($scope.product)
         $scope.product.colors = JSON.parse($scope.product.colors);
         $scope.product.sizes = JSON.parse($scope.product.sizes);
         $scope.product.custom_fields = JSON.parse($scope.product.custom_fields);
         for (var i = 0; i < $scope.product.images.length; i++) {
           $scope.product.images[i].associations = JSON.parse($scope.product.images[i].associations);
         }
-        console.log("----------")
-        console.log($scope);
       });
     }
 
     $scope.createResource = function createResource() {
-      var prodConfig = {
-        'name':  $scope.product.product_name,
-        'desc':  $scope.product.description,
-        'price': $scope.product.price,
-        'sku': $scope.product.sku,
-        'color': JSON.stringify($scope.product.colors),
-        'sizes': JSON.stringify($scope.product.sizes),
-        'custom_fields': JSON.stringify($scope.product.custom_fields)
-      };
-
-      console.log(prodConfig);
-
       Product.save({
         slug_id: $scope.slug_id,
         category: $scope.category_id
-      }, prodConfig, function(res) {
+      }, {
+        name:  $scope.product.product_name,
+        desc:  $scope.product.description,
+        price: $scope.product.price,
+        sku: $scope.product.sku,
+        color: JSON.stringify($scope.product.colors),
+        sizes: JSON.stringify($scope.product.sizes),
+        custom_fields: JSON.stringify($scope.product.custom_fields)
+      }, function(res) {
         $scope.product_id = res.data[0];
         updateImages();
       });
     }
 
     $scope.updateResource = function updateResource() {
-      var prodConfig = {
-        'name':  $scope.product.product_name,
-        'desc':  $scope.product.description,
-        'price': $scope.product.price,
-        'sku': $scope.product.sku,
-        'color': JSON.stringify($scope.product.colors),
-        'sizes': JSON.stringify($scope.product.sizes),
-        'custom_fields': JSON.stringify($scope.product.custom_fields)
-      };
-
-      console.log(prodConfig)
-
       Product.update({
         slug_id: $scope.slug_id,
         category: $scope.category_id,
         product: $scope.product_id
-      }, prodConfig, function(res) {
+      }, {
+        name:  $scope.product.product_name,
+        desc:  $scope.product.description,
+        price: $scope.product.price,
+        sku: $scope.product.sku,
+        color: JSON.stringify($scope.product.colors),
+        sizes: JSON.stringify($scope.product.sizes),
+        custom_fields: JSON.stringify($scope.product.custom_fields)
+      }, function(res) {
         updateImages();
       });
     }
@@ -131,7 +113,6 @@
 
     $scope.updateAssociations = function updateAssociations() {
       var img = $scope.product.images[$scope.product.images.indexOf($scope.activeImage)];
-      console.log("---active img---")
 
       img.associations = [];
 
@@ -139,19 +120,11 @@
         var attrLabel = $(this).find('[id*="attr_label_"]')[0].innerHTML;
         var checked = $(this).find('[id*="attr_checked_"]')[0].checked;
 
-        console.log(attrLabel, checked);
-
         img.associations.push({
           'label': attrLabel,
           'checked': checked
         });
       });
-
-      console.log(img.associations)
-      console.log("@@@@@")
-      console.log($scope.product.images[$scope.product.images.indexOf($scope.activeImage)]);
-
-      console.log($scope)
     }
 
     $scope.deleteImage = function deleteImage(that) {
@@ -161,24 +134,18 @@
           category: $scope.category_id,
           product: $scope.product_id,
           image_id: that.image.image_id
-        }, function(res) {
-          console.log(res);
-        });
+        }, function(res) {});
       }
 
       $scope.product.images = $scope.product.images.filter(function(image) {
         return image.image_url !== that.image.image_url;
       });
-
-      console.log($scope.product.images)
     }
 
     //TODO: make so you dont have to update
     //images if no changes were made
     function updateImages() {
       var images = $scope.product.images;
-      console.log("uploading: ")
-      console.log(images)
 
       if (images.length > 0) {
         $('.overlay').fadeIn(800);
@@ -186,13 +153,9 @@
           p.then(_ => new Promise(resolve =>
             setTimeout(function() {
               if (images[i].hasOwnProperty('file')) {
-                console.log("in add")
                 createImage(images[i]);
-                console.log("out add")
                 resolve();
               } else {
-                console.log("no file field, launch update");
-                console.log(images[i])
                 Product.updateImage({
                   slug_id: $scope.slug_id,
                   category: $scope.category_id,
@@ -200,9 +163,7 @@
                   image_id: images[i].image_id
                 }, {
                   associations: JSON.stringify(images[i].associations)
-                }, function(res) {
-                  console.log(res);
-                });
+                }, function(res) {});
                 resolve();
               }
             }, 1000)
@@ -217,10 +178,7 @@
     }
 
     function createImage(image) {
-      console.log("adding image")
-      console.log(image)
       Product.upload(function(data) {
-        console.log(data);
         fetch(data.url, {
           method: 'PUT',
           body: image.file,
@@ -228,12 +186,6 @@
             'Content-Type': image.file.type
           }
         }).then(function(response) {
-          console.log(response)
-          console.log("if image uploaded to s3 successfully")
-          console.log("saving image, here are the associations: ");
-          console.log(image.associations)
-          console.log("product_id:");
-          console.log($scope.product_id) //TODO get product id on return of .save
           Product.saveImage({
             slug_id: $scope.slug_id,
             category: $scope.category_id,
@@ -242,9 +194,7 @@
             name: data.key,
             url: 'https://my-advanced-node-blog.s3.amazonaws.com/' + data.key,
             associations: JSON.stringify(image.associations)
-          }, function(imgRes) {
-            console.log(imgRes);
-          });
+          }, function(imgRes) {});
         });
       });
     }
@@ -278,17 +228,12 @@
     }
 
     function imageIsLoaded(e, file) {
-      console.log("adding file: ")
-      console.log(file);
       $scope.$apply(function() {
           $scope.product.images.push({
           'image_url': e.target.result,
           'file': file,
           'associations': []
         });
-        
-        console.log("^^^^^^^");
-        console.log($scope.product.images)
       });
     }
 
@@ -317,8 +262,8 @@
 
     $scope.isEmpty = function isEmpty(obj) {
       for(var prop in obj) {
-          if(obj.hasOwnProperty(prop))
-              return false;
+        if(obj.hasOwnProperty(prop))
+          return false;
       }
 
       return true;
@@ -326,8 +271,8 @@
 
     $scope.addColor = function addColor() {
       $scope.product.colors.push({
-        'label': '',
-        'value': ''
+        label: '',
+        value: ''
       });
     }
 
@@ -339,8 +284,8 @@
 
     $scope.addSize = function addSize() {
       $scope.product.sizes.push({
-        'label': '',
-        'value': ''
+        label: '',
+        value: ''
       });
     }
 
@@ -352,11 +297,10 @@
 
     $scope.addPersonalization = function addSize() {
       $scope.product.custom_fields.push({
-        'label': '',
-        'type': 'Type',
-        'price': ''
+        label: '',
+        type: 'Type',
+        price: ''
       });
-      console.log($scope.product.custom_fields);
     }
 
     $scope.removePersonalization = function removeSize(personalizationToRemove) {
@@ -364,21 +308,5 @@
         return personalization.$$hashKey !== personalizationToRemove.$$hashKey;
       });
     }
-  /*
-    $scope.isAssociatedWith = function isAssociatedWith(color) {
-      try {
-        for (var i = 0; i < $scope.activeImage.associations.length; i++) {
-          var association = $scope.activeImage.associations[i];
-          if (association.label = color.label) {
-            return true;
-          }
-        }
-
-        return false;
-      } catch(e) {
-        //no associations
-      }
-    }
-    */
   }]);
 })();
