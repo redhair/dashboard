@@ -2,7 +2,7 @@ var Dashboard = (function() {
 	'use-strict';
 
 	var $port = 80;
-	var $url  = 'http://dashboard.foresightiot.com/';
+	var $url  = 'http://dashboard.foresightiot.com';
 	var $api  = $url + ':' + $port + '/api';
 
 	return angular.module('Dashboard', ['ngRoute', 'ngResource', 'ngMessages', 'ngStorage', 'ngAnimate'])
@@ -21,7 +21,7 @@ var Dashboard = (function() {
 			$routeProvider.when('/organizations/:slug_id/:category/new', {templateUrl: 'views/productForm.html', controller: 'productController'});
 			$routeProvider.when('/organizations/:slug_id/:category/:product/settings', {templateUrl: 'views/productForm.html', controller: 'productController'});
 			$routeProvider.when('/products/all', {templateUrl: 'views/products.html', controller: 'productController'});
-			$routeProvider.otherwise({redirectTo: '/organizations'});
+			$routeProvider.otherwise({redirectTo: '/login'});
 
 			$locationProvider.html5Mode({enabled: true, requireBase: false});
 		}])
