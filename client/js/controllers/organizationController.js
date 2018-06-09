@@ -123,7 +123,7 @@
             method: 'PUT',
             body: file,
             headers: {
-              Content-Type: file.type
+              'Content-Type': file.type
             }
           }).then(function(response) {
             Organization.update({
