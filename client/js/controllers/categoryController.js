@@ -100,9 +100,7 @@
           method: 'DELETE',
           url: 'http://dashboard.foresightiot.com/api/organizations/' + $scope.slug_id + '/categories',
           data: deleteConfig,
-          headers: {
-            Content-Type: 'application/json'
-          }
+          headers: {'Content-Type': 'application/json'}
         }).then(function() {
           $location.url('/organizations/' + $scope.slug_id + '/categories');
         });
