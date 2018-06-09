@@ -22,8 +22,13 @@
 <body>
   <div ng-view class="main card"></div>
 
-  <div class="overlay bg-primary">
+  <div class="overlay bg-primary" style="display: flex; flex-direction: column;">
     <img width="500" src="img/overlay.png">
+    <div class="loader">
+      <div class="circle1"></div>
+      <div class="circle2"></div>
+      <div class="circle3"></div>
+    </div>
   </div>
 
   <script src="libs/angular/angular.js"></script>

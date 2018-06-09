@@ -1,36 +1,39 @@
 (function() {
   'use-strict';
 
-  Dashboard.controller('categoryController', ['$scope', '$location', '$http', 'Category', function($scope, $location, $http, Category) {
+  Dashboard.controller('categoryController', ['$scope', '$location', '$http', '$route', 'Category', function($scope, $location, $http, $route, Category) {
+    const params = $route.current.params;
+    const action = getAction();
     $scope.title = "Categories";
     $scope.backButton = true;
     $scope.pathname = window.location.pathname;
-    $scope.action = $scope.pathname.split("/")[$scope.pathname.split("/").length - 1];
-    $scope.slug_id = $scope.pathname.split("/")[2]; 
+    $scope.slug_id = $scope.pathname.split("/")[2];
 
-    console.log("controller: cats");
-    console.log("action: "+$scope.action);
-    if ($scope.action === 'categories') {
+    if (action === 'categories') {
       $scope.title = "Categories";
       $scope.categories = getAllCategories();
       $scope.handleBackButton = function() {
         $location.url('/organizations');
       }
-    } else if ($scope.action === 'settings') {
+    } else if (action === 'settings') {
       $scope.title = "Category Settings";
+      $scope.editSettings = true;
       var category = decodeURIComponent($scope.pathname.split("/")[3]);
       $scope.category = getSingleCategory(category);
       $scope.handleBackButton = function() {
+        console.log($scope.slug_id);
         $location.url('/organizations/' + $scope.slug_id + '/categories');
       }
-    } else if ($scope.action === 'new') {
+    } else if (action === 'new') {
       $scope.title = "New Category";
+      $scope.createNew = true;
       $scope.handleBackButton = function() {
         $location.url('/organizations/' + $scope.slug_id + '/categories');
       }
     }
 
     function getAllCategories() {
+      console.log("in")
       return Category.query({
         slug_id: $scope.slug_id 
       });
@@ -40,13 +43,13 @@
       return Category.get({
         slug_id: $scope.slug_id,
         category: category
-      }, function() {
-        console.log("returning ")
-        console.log($scope.category);
+      }, function(res) {
+        //console.log(res)
+        $scope.category = res[0];
       });
     }
 
-    $scope.createNewCategory = function createNewCategory() {
+    $scope.createResource = function createResource() {
       var newCatForm = $('#new_popshop');
       var catName = newCatForm.find('#name').val();
       var description = newCatForm.find('#description').val();
@@ -61,12 +64,14 @@
         "description": description
       }
 
-      Category.save({slug_id: $scope.slug_id}, catConfig, function(res) {
+      Category.save({
+        slug_id: $scope.slug_id
+      }, catConfig, function(res) {
         $location.url('/organizations/' + $scope.slug_id + '/categories');
       });
     }
 
-    $scope.updateCategory = function updateCategory() {
+    $scope.updateResource = function updateResource() {
       var catForm = $('#edit_popshop');
       var catName = catForm.find('#name').val();
       var description = catForm.find('#description').val();
@@ -75,33 +80,53 @@
 
       var catConfig = {
         name: catName,
-        id: $scope.category[0].category_id
+        id: $scope.category.category_id
       };
 
       console.log("updating cat:")
       console.log(catConfig)
 
-      Category.update({slug_id: $scope.slug_id}, catConfig, function(msg) {
+      Category.update({
+        slug_id: $scope.slug_id
+      }, catConfig, function(msg) {
         console.log(msg)
         $location.url('/organizations/' + $scope.slug_id + '/categories');
       })
     }
 
-    $scope.deleteCategory = function deleteCategory() {
-      console.log($scope.category[0].category_name)
+    $scope.deleteResource = function deleteResource() {
+      $('#promptDelete').on('hidden.bs.modal', function() {
+        var deleteConfig = {
+          'name': $scope.category.category_name
+        };
 
-      var deleteConfig = {
-        name: $scope.category[0].category_name
-      };
+        console.log($scope.slug_id)
+        console.log(deleteConfig)
 
-      $http({
-        method: 'DELETE',
-        url: 'http://localhost:3001/organizations/' + $scope.slug_id + '/categories',
-        data: deleteConfig,
-        headers: {'Content-Type': 'application/json;charset=utf-8'}
-      }).then(function() {
-        $location.url('/organizations/' + $scope.slug_id + '/categories');
-      })
+        /*
+        Category.delete({
+          slug_id: $scope.slug_id
+        }, deleteConfig, function(res) {
+          console.log(res);
+          $location.url('/organizations/' + $scope.slug_id + '/categories');
+        });
+        */
+
+        $http({
+          method: 'DELETE',
+          url: 'http://206.189.176.175/api/organizations/' + $scope.slug_id + '/categories',
+          data: deleteConfig,
+          headers: {'Content-Type': 'application/json'}
+        }).then(function() {
+          $location.url('/organizations/' + $scope.slug_id + '/categories');
+        });
+        
+      });
+      $('#promptDelete').modal('hide');
+    }
+
+    $scope.goTo = function goTo(location) {
+      $location.url(location);
     }
 
     $scope.getProducts = function getProducts(cat, $event) {
@@ -114,6 +139,11 @@
       }
 
       $location.url('/organizations/' + $scope.slug_id + '/' + cat.category_id);
+    }
+
+    function getAction() {
+      var path = window.location.pathname.split('/');
+      return path[path.length - 1];
     }
   }]);
 })();

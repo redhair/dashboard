@@ -1,35 +1,46 @@
 (function() {
   'use-strict';
 
-  Dashboard.controller('productController', ['$scope', '$location', 'Product', function($scope, $location, Product) {
+  Dashboard.controller('productController', ['$scope', '$location', '$route', 'Product', function($scope, $location, $route, Product) {
+    const params = $route.current.params;
+    console.log(params);
+    const action = getAction();
     $scope.title = "Products";
     $scope.backButton = true;
-    $scope.pathname = window.location.pathname;
-    $scope.slug_id = $scope.pathname.split("/")[2];
-    $scope.category_id = $scope.pathname.split("/")[3];
-    $scope.product_id = $scope.pathname.split("/")[4];
-    $scope.action = $scope.pathname.split("/")[$scope.pathname.split("/").length - 1]; 
+    $scope.slug_id = params.slug_id;
+    $scope.category_id = params.category;
+    $scope.product_id = params.product;
 
     console.log("controller: prods");
-    console.log("action: " + $scope.action);
-    if ($scope.action === 'settings') {
+    console.log("action: " + action);
+    if (action === 'settings') {
       $scope.title = "Product Settings";
-      $scope.product = getSingleProduct($scope.product_id);
+      $scope.product = getSingleProduct();
+      $scope.editSettings = true;
 
       $scope.handleBackButton = function() {
         $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
       }
-    } else if ($scope.action === 'new') {
+    } else if (action === 'new') {
       $scope.title = "New Product";
+      $scope.createNew = true;
+      $scope.product = new Product();
+      $scope.product.images = [];
+      $scope.product.colors = [];
+      $scope.product.sizes = [];
+      $scope.product.custom_fields = [];
+
       $scope.handleBackButton = function() {
         $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
       }
-    } else if ($scope.action === 'all') {
+    } else if (action === 'all') {
       $scope.title = "All Products";
+      $scope.backButton = false;
       $scope.products = getAllProducts();
     } else {
       $scope.title = "Products";
       $scope.products = getOrgProducts();
+
       $scope.handleBackButton = function() {
         $location.url('/organizations/' + $scope.slug_id + '/categories');
       }
@@ -50,86 +61,56 @@
       });
     }
 
-    function getSingleProduct(product_id) {
+    function getSingleProduct() {
       return Product.get({
         slug_id: $scope.slug_id,
         category: $scope.category_id,
-        product: product_id
+        product: $scope.product_id
       }, function(product) {
-        $scope.product = product;
-        $scope.colors = JSON.parse($scope.product[0].colors);
-        $scope.sizes = JSON.parse($scope.product[0].sizes);
-        console.log($scope.colors)
+        $scope.product = product[0];
+        console.log($scope.product)
+        $scope.product.colors = JSON.parse($scope.product.colors);
+        $scope.product.sizes = JSON.parse($scope.product.sizes);
+        $scope.product.custom_fields = JSON.parse($scope.product.custom_fields);
+        for (var i = 0; i < $scope.product.images.length; i++) {
+          $scope.product.images[i].associations = JSON.parse($scope.product.images[i].associations);
+        }
+        console.log("----------")
+        console.log($scope);
       });
     }
 
-    $scope.createNewProduct = function createNewProduct() {
-      var newProdForm = $('#new_product');
-      var name = newProdForm.find('#name').val();
-      var price = newProdForm.find('#price').val();
-      var desc = newProdForm.find('#description').val();
-      var image = newProdForm.find('#logo_image').val();
-      var colors = {};
-      var sizes = {};
+    $scope.createResource = function createResource() {
+      var prodConfig = {
+        'name':  $scope.product.product_name,
+        'desc':  $scope.product.description,
+        'price': $scope.product.price,
+        'sku': $scope.product.sku,
+        'color': JSON.stringify($scope.product.colors),
+        'sizes': JSON.stringify($scope.product.sizes),
+        'custom_fields': JSON.stringify($scope.product.custom_fields)
+      };
 
-      $('.colorOption').each(function() {
-        var label = $(this).find('[id*="color_label_"]').val();
-        var value = $(this).find('[id*="color_selection_"]').val();
-        colors[label] = value;
-      });
-
-      $('.sizeOption').each(function() {
-        var label = $(this).find('[id*="size_label_"]').val();
-        var value = parseInt($(this).find('[id*="size_price_"]').val());
-        sizes[label] = value;
-      });
-
-      console.log(colors, sizes)
-
-      var productConfig = {
-        "name": name,
-        "desc": description,
-        "price": price,
-        "color": JSON.stringify(colors),
-        "sizes": JSON.stringify(sizes)
-      }
-
-      console.log(productConfig)
+      console.log(prodConfig);
 
       Product.save({
         slug_id: $scope.slug_id,
         category: $scope.category_id
-      }, productConfig, function(msg) {
-        $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
+      }, prodConfig, function(res) {
+        $scope.product_id = res.data[0];
+        updateImages();
       });
     }
 
-    $scope.updateProduct = function updateProduct() {
-      var prodForm = $('#edit_product');
-      var prodName = prodForm.find('#name').val();
-      var prodPrice = prodForm.find('#price').val();
-      var description = prodForm.find('#description').val();
-      var colors = {};
-      var sizes = {};
-
-      $('.colorOption').each(function() {
-        var label = $(this).find('[id*="color_label_"]').val();
-        var value = $(this).find('[id*="color_selection_"]').val();
-        colors[label] = value;
-      });
-
-      $('.sizeOption').each(function() {
-        var label = $(this).find('[id*="size_label_"]').val();
-        var value = parseInt($(this).find('[id*="size_price_"]').val());
-        sizes[label] = value;
-      });
-
+    $scope.updateResource = function updateResource() {
       var prodConfig = {
-        "name": prodName,
-        "desc": description,
-        "price": prodPrice,
-        "color": JSON.stringify(colors),
-        "sizes": JSON.stringify(sizes)
+        'name':  $scope.product.product_name,
+        'desc':  $scope.product.description,
+        'price': $scope.product.price,
+        'sku': $scope.product.sku,
+        'color': JSON.stringify($scope.product.colors),
+        'sizes': JSON.stringify($scope.product.sizes),
+        'custom_fields': JSON.stringify($scope.product.custom_fields)
       };
 
       console.log(prodConfig)
@@ -138,30 +119,186 @@
         slug_id: $scope.slug_id,
         category: $scope.category_id,
         product: $scope.product_id
-      }, prodConfig, function(msg) {
-        $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
-      })
+      }, prodConfig, function(res) {
+        updateImages();
+      });
     }
 
-    $scope.deleteProduct = function deleteProduct() {
-      Product.remove({
-        slug_id: $scope.slug_id,
-        category: $scope.category_id,
-        product: $scope.product_id
-      }, function() {
+    $scope.showImageConfig = function showImageConfig(img) {
+      $scope.activeImage = img;
+      $('#promptImageConfig').modal();
+    }
+
+    $scope.updateAssociations = function updateAssociations() {
+      var img = $scope.product.images[$scope.product.images.indexOf($scope.activeImage)];
+      console.log("---active img---")
+
+      img.associations = [];
+
+      $('.mappingOption').each(function() {
+        var attrLabel = $(this).find('[id*="attr_label_"]')[0].innerHTML;
+        var checked = $(this).find('[id*="attr_checked_"]')[0].checked;
+
+        console.log(attrLabel, checked);
+
+        img.associations.push({
+          'label': attrLabel,
+          'checked': checked
+        });
+      });
+
+      console.log(img.associations)
+      console.log("@@@@@")
+      console.log($scope.product.images[$scope.product.images.indexOf($scope.activeImage)]);
+
+      console.log($scope)
+    }
+
+    $scope.deleteImage = function deleteImage(that) {
+      if (!that.image.hasOwnProperty('file')) {
+        Product.deleteImage({
+          slug_id: $scope.slug_id,
+          category: $scope.category_id,
+          product: $scope.product_id,
+          image_id: that.image.image_id
+        }, function(res) {
+          console.log(res);
+        });
+      }
+
+      $scope.product.images = $scope.product.images.filter(function(image) {
+        return image.image_url !== that.image.image_url;
+      });
+
+      console.log($scope.product.images)
+    }
+
+    //TODO: make so you dont have to update
+    //images if no changes were made
+    function updateImages() {
+      var images = $scope.product.images;
+      console.log("uploading: ")
+      console.log(images)
+
+      if (images.length > 0) {
+        $('.overlay').fadeIn(800);
+        [...images].reduce((p, _, i) => 
+          p.then(_ => new Promise(resolve =>
+            setTimeout(function() {
+              if (images[i].hasOwnProperty('file')) {
+                console.log("in add")
+                createImage(images[i]);
+                console.log("out add")
+                resolve();
+              } else {
+                console.log("no file field, launch update");
+                console.log(images[i])
+                Product.updateImage({
+                  slug_id: $scope.slug_id,
+                  category: $scope.category_id,
+                  product: $scope.product_id,
+                  image_id: images[i].image_id
+                }, {
+                  associations: JSON.stringify(images[i].associations)
+                }, function(res) {
+                  console.log(res);
+                });
+                resolve();
+              }
+            }, 1000)
+        )), Promise.resolve())
+        .then(() => {
+          $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
+          //$scope.$apply();
+        });
+      } else {
         $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
+      }
+    }
+
+    function createImage(image) {
+      console.log("adding image")
+      console.log(image)
+      Product.upload(function(data) {
+        console.log(data);
+        fetch(data.url, {
+          method: 'PUT',
+          body: image.file,
+          headers: {
+            'Content-Type': image.file.type
+          }
+        }).then(function(response) {
+          console.log(response)
+          console.log("if image uploaded to s3 successfully")
+          console.log("saving image, here are the associations: ");
+          console.log(image.associations)
+          console.log("product_id:");
+          console.log($scope.product_id) //TODO get product id on return of .save
+          Product.saveImage({
+            slug_id: $scope.slug_id,
+            category: $scope.category_id,
+            product: $scope.product_id
+          }, {
+            name: data.key,
+            url: 'https://my-advanced-node-blog.s3.amazonaws.com/' + data.key,
+            associations: JSON.stringify(image.associations)
+          }, function(imgRes) {
+            console.log(imgRes);
+          });
+        });
+      });
+    }
+
+    $scope.deleteResource = function deleteResource() {
+      $('#promptDelete').on('hidden.bs.modal', function() {
+        Product.remove({
+          slug_id: $scope.slug_id,
+          category: $scope.category_id,
+          product: $scope.product_id
+        }, function() {
+          $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
+        });
+      });
+      $('#promptDelete').modal('hide');
+    }
+
+    $scope.showThumbnail = function showThumbnail(event) {
+      var files = event.target.files;
+
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (function(file) {
+          return function(e) {
+            imageIsLoaded(e, file);
+          }
+        })(file);
+      }
+    }
+
+    function imageIsLoaded(e, file) {
+      console.log("adding file: ")
+      console.log(file);
+      $scope.$apply(function() {
+          $scope.product.images.push({
+          'image_url': e.target.result,
+          'file': file,
+          'associations': []
+        });
+        
+        console.log("^^^^^^^");
+        console.log($scope.product.images)
       });
     }
 
     $scope.onFormChange = function onFormChange() {
-      console.log('Form Changed');
       $scope.handleBackButton = function() {
         $('#promptLeave').modal();
       }
     }
 
     $scope.goBack = function goBack() {
-      console.log("going back")
       $('#promptLeave').modal('hide');
       $('#promptLeave').on('hidden.bs.modal', function() {
         $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
@@ -172,5 +309,76 @@
     $scope.goTo = function goTo(location) {
       $location.url(location);
     }
+
+    function getAction() {
+      var path = window.location.pathname.split('/');
+      return path[path.length - 1];
+    }
+
+    $scope.isEmpty = function isEmpty(obj) {
+      for(var prop in obj) {
+          if(obj.hasOwnProperty(prop))
+              return false;
+      }
+
+      return true;
+    }
+
+    $scope.addColor = function addColor() {
+      $scope.product.colors.push({
+        'label': '',
+        'value': ''
+      });
+    }
+
+    $scope.removeColor = function removeColor(colorToRemove) {
+      $scope.product.colors = $scope.product.colors.filter(function(color) {
+        return color.$$hashKey !== colorToRemove.$$hashKey;
+      });
+    }
+
+    $scope.addSize = function addSize() {
+      $scope.product.sizes.push({
+        'label': '',
+        'value': ''
+      });
+    }
+
+    $scope.removeSize = function removeSize(sizeToRemove) {
+      $scope.product.sizes = $scope.product.sizes.filter(function(size) {
+        return size.$$hashKey !== sizeToRemove.$$hashKey;
+      });
+    }
+
+    $scope.addPersonalization = function addSize() {
+      $scope.product.custom_fields.push({
+        'label': '',
+        'type': 'Type',
+        'price': ''
+      });
+      console.log($scope.product.custom_fields);
+    }
+
+    $scope.removePersonalization = function removeSize(personalizationToRemove) {
+      $scope.product.custom_fields = $scope.product.custom_fields.filter(function(personalization) {
+        return personalization.$$hashKey !== personalizationToRemove.$$hashKey;
+      });
+    }
+  /*
+    $scope.isAssociatedWith = function isAssociatedWith(color) {
+      try {
+        for (var i = 0; i < $scope.activeImage.associations.length; i++) {
+          var association = $scope.activeImage.associations[i];
+          if (association.label = color.label) {
+            return true;
+          }
+        }
+
+        return false;
+      } catch(e) {
+        //no associations
+      }
+    }
+    */
   }]);
 })();

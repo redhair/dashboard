@@ -15,6 +15,7 @@ $button-padding: ($font-size * 0.5) ($font-size * 0.625);
 $button-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
 $button-shadow-depressed: 0 0 0 0.5px rgba(50,50,93,.15), 0 2px 5px 0 rgba(50,50,93,.08), 0 1px 1.5px 0 rgba(0,0,0,.05), 0 1px 2px 0 rgba(0,0,0,.06), 0 0 0 0 transparent;
 $card-shadow: 0 7px 14px 0 rgba(50,50,93,.1), 0 3px 6px 0 rgba(0,0,0,.07);
+$outlineShadow: 0 0 0 0.2rem rgba(red($primary-color), green($primary-color), blue($primary-color), 0.50) !default;
 
 $card-color: #fff !default;
 
@@ -202,6 +203,11 @@ select {
   border: 0;
 }
 
+.btn:focus {
+  outline: 0;
+  box-shadow: $outlineShadow;
+}
+
 .btn--primary {
   color: rgb(242, 242, 242);
   background-color: $primary-color;
@@ -295,6 +301,33 @@ select {
   display: block;
 }
 
+.create-new {
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+
+  transition: all 0.5s ease;
+}
+
+.create-new:hover {
+  text-decoration: none;
+  color: lighten($primary-color, 10%);
+  outline: 0;
+  box-shadow: $button-shadow-depressed;
+
+  transition: all 0.5s ease;
+}
+
+.create-new:focus {
+  outline: 0;
+  border: 0;
+}
+
+.create-new span {
+  -webkit-text-stroke: 3px $card-color;
+}
+
 .error-message {
   padding-left: 5px;
   color: $danger-color;
@@ -358,4 +391,29 @@ select {
   content: '\f071';
   padding-right: 10px;
   color: darken($danger-color, 20%);
+}
+
+.form-control:focus {
+  border-color: $primary-color;
+  box-shadow: $outlineShadow;
+}
+
+.modal-content {
+  background-color: $background-color;
+}
+
+.header {
+  background-color: $background-color;
+}
+
+.list-group-item {
+  background-color: $card-color;
+}
+
+.close {
+  color: $background-text-color;
+}
+
+.close:hover {
+  color: $background-text-color;
 }

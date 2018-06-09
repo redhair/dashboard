@@ -7,28 +7,13 @@
 		<div class="mb-4">
 			<label for="name"><h5>Category Name</h5></label>
 			<br>
-			<input id="name" class="form-control" type="text" ng-model="category[0].category_name">
+			<input id="name" class="form-control" type="text" ng-model="category.category_name">
 		</div>
 		<div class="mb-4">
 			<label for="description"><h5>Description</h5></label>
-			<textarea id="description" class="form-control" rows="5" ng-model="category[0].description"></textarea>
+			<textarea id="description" class="form-control" rows="5" ng-model="category.description"></textarea>
 		</div>
 	</div>
-	<!--
-	<div class="form-group">
-		<div class="custom-file">
-		   <input id="logo_image" type="file" class="custom-file-input">
-		   <label for="logo_image" class="custom-file-label">Select A New Category Logo...</label>
-		</div>
-	</div>
-	<ul class="list-group list-group" ng-repeat="image in category[0].image">
-	  <li class="list-group-item">{{image}}<span class="fa fa-minus-square btn-danger"></span></li>
-	</ul>
-	-->
-	<button class="btn btn--success" style="width:100%" ng-click="updateCategory()">Update Category</button>
-	<hr>
-	<h5>Delete Category</h5>
-	<button class="btn btn--danger" style="width: 100%;" ng-click="deleteCategory()">Delete Category</button>
 </form>
 </div>
 <div ng-include="'partials/promptDelete.html'"></div>

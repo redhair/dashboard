@@ -1,8 +1,8 @@
 var Dashboard = (function() {
 	'use-strict';
 
-	var $port = 5000;
-	var $url  = 'http://localhost';
+	var $port = 80;
+	var $url  = 'http://206.189.176.175';
 	var $api  = $url + ':' + $port + '/api';
 
 	return angular.module('Dashboard', ['ngRoute', 'ngResource', 'ngMessages', 'ngStorage', 'ngAnimate'])
@@ -12,23 +12,22 @@ var Dashboard = (function() {
 			$routeProvider.when('/register', {templateUrl: 'views/register.html', controller: 'loginController'});
 			$routeProvider.when('/login', {templateUrl: 'views/login.html', controller: 'loginController'});
 			$routeProvider.when('/organizations', {templateUrl: 'views/organizations.html', controller: 'organizationController'});
-			$routeProvider.when('/organizations/new', {templateUrl: 'views/new_organization.html', controller: 'organizationController'});
-			$routeProvider.when('/organizations/:slug_id/settings', {templateUrl: 'views/orgsettings.html', controller: 'organizationController'});
+			$routeProvider.when('/organizations/new', {templateUrl: 'views/orgForm.html', controller: 'organizationController'});
+			$routeProvider.when('/organizations/:slug_id/settings', {templateUrl: 'views/orgForm.html', controller: 'organizationController'});
 			$routeProvider.when('/organizations/:slug_id/categories', {templateUrl: 'views/categories.html', controller: 'categoryController'});
 			$routeProvider.when('/organizations/:slug_id/categories/new', {templateUrl: 'views/new_category.html', controller: 'categoryController'});
 			$routeProvider.when('/organizations/:slug_id/:category/settings', {templateUrl: 'views/categorysettings.html', controller: 'categoryController'});
 			$routeProvider.when('/organizations/:slug_id/:category', {templateUrl: 'views/products.html', controller: 'productController'});
-			$routeProvider.when('/organizations/:slug_id/:category/new', {templateUrl: 'views/new_product.html', controller: 'productController'});
-			$routeProvider.when('/organizations/:slug_id/:category/:product/settings', {templateUrl: 'views/productsettings.html', controller: 'productController'});
+			$routeProvider.when('/organizations/:slug_id/:category/new', {templateUrl: 'views/productForm.html', controller: 'productController'});
+			$routeProvider.when('/organizations/:slug_id/:category/:product/settings', {templateUrl: 'views/productForm.html', controller: 'productController'});
 			$routeProvider.when('/products/all', {templateUrl: 'views/products.html', controller: 'productController'});
 			$routeProvider.otherwise({redirectTo: '/organizations'});
 
 			$locationProvider.html5Mode({enabled: true, requireBase: false});
-
 		}])
 		.controller('mainController', ['$scope', '$localStorage', function($scope, $localStorage) {
 			$scope.$on('$viewContentLoaded', function(event) {
-			    setTimeout(function(){
+			    setTimeout(function() {
 			      $('.overlay').fadeOut(800);
 			    }, 0);
 			});
@@ -47,8 +46,15 @@ var Dashboard = (function() {
 		}])
 		.factory('Organization', function($resource) {
 			return $resource($api + '/organizations/:slug_id', {}, {
+				'get': {
+					isArray: true
+				},
 				'update': {
 					method: 'PUT'
+				},
+				'upload': {
+					method: 'GET',
+					url: $api + '/upload'
 				}
 			});
 		})
@@ -65,6 +71,9 @@ var Dashboard = (function() {
 				},
 				'update': {
 					method: 'PUT'
+				},
+				'delete': {
+					method: 'DELETE'
 				}
 			});
 		})
@@ -79,7 +88,16 @@ var Dashboard = (function() {
 					isArray: true
 				},
 				'save': {
-					method: 'POST'
+					method: 'POST',
+					url: $api + '/organizations/:slug_id/:category',
+					isArray: false,
+					transformResponse: function (data, headers) {
+            if (data == '') {
+                return;
+            }
+
+            return { data: JSON.parse(data) };
+          }
 				},
 				'update': {
 					method: 'PUT'
@@ -88,6 +106,21 @@ var Dashboard = (function() {
 					method: 'GET',
 					isArray: true,
 					url: $api + '/products/all'
+				},
+				'upload': {
+					method: 'GET',
+					url: $api + '/upload'
+				},
+				'saveImage': {
+					method: 'POST'
+				},
+				'updateImage': {
+					method: 'PUT',
+					url: $api + '/organizations/:slug_id/:category/:product/:image_id'
+				},
+				'deleteImage': {
+					method: 'DELETE',
+					url: $api + '/organizations/:slug_id/:category/:product/:image_id'
 				}
 			});
 		})
@@ -96,12 +129,12 @@ var Dashboard = (function() {
 		})
 		.factory('Authentication', function($http, $localStorage) {
 			var service = {};
-	 
+
 			service.Login = Login;
 			service.Logout = Logout;
-	 
+
 			return service;
-	 
+
 			function Login(email, password, callback) {
 				$http({
 					method: 'POST',
@@ -109,8 +142,9 @@ var Dashboard = (function() {
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 					transformRequest: function(obj) {
 				        var str = [];
-				        for(var p in obj)
-				        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+				        for(var p in obj) {
+				        	str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+				        }
 				        return str.join('&');
 				    },
 					data: { email: email, password: password }
@@ -127,7 +161,6 @@ var Dashboard = (function() {
 			}
 	 
 			function Logout() {
-				// remove user from local storage and clear http auth header
 				delete $localStorage.currentUser;
 				$http.defaults.headers.common.Authorization = '';
 			}
@@ -135,7 +168,6 @@ var Dashboard = (function() {
 		.factory('httpRequestInterceptor', function($localStorage, $location) {
 		  return {
 		    request: function(config) {
-		      console.log(config)
 		      if ($localStorage.currentUser) {
 		      	config.headers['Authorization'] = 'Bearer ' + $localStorage.currentUser.token;
 		      }
@@ -143,12 +175,9 @@ var Dashboard = (function() {
 		      return config;
 		    },
 		    response: function(response) {
-		  		console.log(response.status)
-
 		  		return response;
 		  	},
 		  	responseError: function(rejection) {
-		  		console.log(rejection);
 		  		if (rejection.status === 401) {
 		  			$location.path('/login');
 		  		}

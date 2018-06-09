@@ -5,7 +5,7 @@
 	<div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
 		<a href="/organizations/{{slug_id}}/{{category_id}}/new" class="card create-new">
 			<h1>
-				<span class="fa-stack fa-lg" style="-webkit-text-stroke: 3px white;">
+				<span class="fa-stack fa-lg">
 				    <i class="fa fa-circle-thin fa-stack-2x"></i>
 				    <i style="line-height: 88px;" class="fa fa-plus fa-stack-1x"></i>
 				</span>
@@ -14,14 +14,13 @@
 	</div>
 	<div ng-repeat='product in products' class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
 		<div class='card'>
-			<div back-img="{{product.image}}" class='card__image' style="height: 60%"></div>
-	        <div class='card__description' style="height: 40%;">
-				<div class='card__title'>
-					<h5>{{product.product_name}}</h5>
-				</div>
-				<div class="card__buttons">
+			<div back-img="{{product.images[0].image_url}}" class='card__image' style="height: 50%"></div>
+	        <div class='card__description' style="height: 50%;">
+				<h5 class='card__title' style="height:20%;">{{product.product_name}}</h5>
+				<p style="margin:0;height:30%;">{{product.description}}</p>
+				<div class="card__buttons" style="height:50%;margin:0;">
+					<h4 class="pull-left"><span class="badge badge-primary">${{product.price}}</span></h4>
 					<button class='btn btn--secondary fa fa-cog' ng-click="goTo('/organizations/'+slug_id+'/'+category_id+'/'+product.product_id+'/settings');"></button>
-					<h4 class="pull-right"><span class="badge badge-primary">${{product.price}}</span></h4>
 				</div>
 	        </div>
         </div>

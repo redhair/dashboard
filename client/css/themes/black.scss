@@ -1,7 +1,15 @@
 @charset "UTF-8";
 
+$primary-color: #6991da;
+$secondary-color: rgb(238, 238, 238);
+$success-color: #3acc93;
+$danger-color: rgb(246, 119, 119);
+$warning-color: rgb(255, 235, 148);
+$white: #FFFFFF;
+
 $background-color: #2a2f33;
 $background-text-color: rgb(242, 242, 242);
 $card-color: #354050;
+$outlineShadow: 0 0 0 0.2rem rgba(red($primary-color), green($primary-color), blue($primary-color), 0.9);
 
 @import '../boost';

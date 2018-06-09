@@ -3,21 +3,21 @@
 
 <div class="row innerContent">
 	<div class="col-sm-12">
+		<a href="/organizations/{{slug_id}}/categories/new" class="card create-new" style="padding: 10px 0;">
+			<h1 style="margin: 0;">
+				<span class="fa-stack">
+				    <i class="fa fa-circle-thin fa-stack-2x"></i>
+				    <i style="line-height: 69px;" class="fa fa-plus fa-stack-1x"></i>
+				</span>
+			</h1>
+		</a>
 		<ul class="list-group">
-			<a style="border-bottom: 1px solid #dcdcdc !important;border-left:0;border-right:0;" href="/organizations/{{slug_id}}/categories/new" class="list-group-item create-new">
-				<h1 style="margin: 0; border-bottom: 0;">
-					<span class="fa-stack" style="-webkit-text-stroke: 3px white;">
-					    <i class="fa fa-circle-thin fa-stack-2x"></i>
-					    <i style="line-height: 69px;" class="fa fa-plus fa-stack-1x"></i>
-					</span>
-				</h1>
-			</a>
 			<li ng-repeat='category in categories' class="list-group-item clickable" ng-click="getProducts(category, $event)">
 				<div class="category-wrapper">
 					<div style="flex: 1">
 						<h3>{{category.category_name}}</h3>
 					</div>
-					<p style="flex: 3">{{category.description}}</p>
+					<p style="flex: 4">{{category.description}}</p>
 					<div ng-if="category.active" style="flex: 1; text-align: center;">
 						<i class="fa fa-circle success"></i>
 					</div>
@@ -25,8 +25,8 @@
 						<i class="fa fa-circle danger"></i>
 					</div>
 					<div style="flex: 1; text-align: right;">
-						<a href="/organizations/{{slug_id}}/{{category.category_id}}"><button class='btn btn--primary'>Products</button></a>
-						<a href="/organizations/{{slug_id}}/{{category.category_name}}/settings"><button class='btn btn--secondary fa fa-cog'></button></a>
+						<!--<a href="/organizations/{{slug_id}}/{{category.category_id}}"><button class='btn btn--primary'>Products</button></a>-->
+						<button ng-click="goTo('/organizations/'+slug_id+'/'+category.category_name+'/settings')" class='btn btn--secondary fa fa-cog'></button>
 					</div>
 				</div>
 			</li>
