@@ -2,7 +2,7 @@ var Dashboard = (function() {
 	'use-strict';
 
 	var $port = 80;
-	var $url  = 'http://dashboard.foresightiot.com';
+	var $url  = 'http://dashboard.allcountyapparel.com';
 	var $api  = $url + ':' + $port + '/api';
 
 	return angular.module('Dashboard', ['ngRoute', 'ngResource', 'ngMessages', 'ngStorage', 'ngAnimate'])

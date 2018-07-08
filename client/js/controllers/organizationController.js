@@ -33,7 +33,7 @@
     }
 
     $scope.copyUrl = function($event) {
-      var url = "localhost:3000/" + this.org.slug_id;
+      var url = "http://shop.allcountyapparel.com/" + this.org.slug_id;
 
       var txt = document.createElement("textarea");
       txt.value = url;
