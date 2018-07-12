@@ -11,7 +11,7 @@
         <div style="height: 200px;display:flex;flex-direction: row;flex-wrap: wrap;">
           <p ng-if="product.colors.length === 0" style="display:flex;flex-direction: column;width:50%;margin:auto;text-align:center;">You have no colors! Add some to see the association options.</p>
           <div ng-repeat="color in product.colors" style="display:flex;flex-direction: column;width:50%;">
-            <div class="mappingOption" style="display:flex;width:50%;justify-content: space-between;margin:auto;">
+            <div class="mappingOption">
               <span id="attr_label_{{$index}}">{{color.label}}</span>
               <input id="attr_checked_{{$index}}" type="checkbox" ng-model="product.images[product.images.indexOf(activeImage)].associations[$index].checked">
               <label style="display: flex; margin-left: 0;" for="attr_checked_{{$index}}" class="switch"></label>

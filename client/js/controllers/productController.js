@@ -70,6 +70,26 @@
       });
     }
 
+    $scope.duplicateResource = function duplicateResource(product) {
+      console.log(product)
+      $scope.product = product;
+      Product.save({
+        slug_id: $scope.slug_id,
+        category: $scope.category_id
+      }, {
+        name:  $scope.product.product_name,
+        desc:  $scope.product.description,
+        price: $scope.product.price,
+        sku: $scope.product.sku,
+        color: typeof $scope.product.colors == "string" ? $scope.product.colors : JSON.stringify($scope.product.colors),
+        sizes: typeof $scope.product.sizes == "string" ? $scope.product.sizes : JSON.stringify($scope.product.sizes),
+        custom_fields: typeof $scope.product.custom_fields == "string" ? $scope.product.custom_fields : JSON.stringify($scope.product.custom_fields)
+      }, function(res) {
+        console.log(res);
+        $route.reload();
+      });
+    }
+
     $scope.createResource = function createResource() {
       Product.save({
         slug_id: $scope.slug_id,
@@ -162,15 +182,14 @@
                   product: $scope.product_id,
                   image_id: images[i].image_id
                 }, {
-                  associations: JSON.stringify(images[i].associations)
+                  associations: typeof images[i].associations == "string" ? images[i].associations : JSON.stringify(images[i].associations)
                 }, function(res) {});
                 resolve();
               }
-            }, 1000)
+            }, 500)
         )), Promise.resolve())
         .then(() => {
           $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);
-          //$scope.$apply();
         });
       } else {
         $location.url('/organizations/' + $scope.slug_id + '/' + $scope.category_id);

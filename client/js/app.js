@@ -11,6 +11,7 @@ var Dashboard = (function() {
 
 			$routeProvider.when('/register', {templateUrl: 'views/register.html', controller: 'loginController'});
 			$routeProvider.when('/login', {templateUrl: 'views/login.html', controller: 'loginController'});
+			$routeProvider.when('/orders', {templateUrl: 'views/orders.html', controller: 'orderController'});
 			$routeProvider.when('/organizations', {templateUrl: 'views/organizations.html', controller: 'organizationController'});
 			$routeProvider.when('/organizations/new', {templateUrl: 'views/orgForm.html', controller: 'organizationController'});
 			$routeProvider.when('/organizations/:slug_id/settings', {templateUrl: 'views/orgForm.html', controller: 'organizationController'});
@@ -44,6 +45,13 @@ var Dashboard = (function() {
 				$scope.myTheme = $localStorage.theme;
 			}
 		}])
+		.factory('Order', function($resource) {
+			return $resource($api + '/order', {}, {
+				'get': {
+					isArray: true
+				}
+			});
+		})
 		.factory('Organization', function($resource) {
 			return $resource($api + '/organizations/:slug_id', {}, {
 				'get': {
@@ -92,12 +100,12 @@ var Dashboard = (function() {
 					url: $api + '/organizations/:slug_id/:category',
 					isArray: false,
 					transformResponse: function (data, headers) {
-            if (data == '') {
-                return;
-            }
+			            if (data == '') {
+			                return;
+			            }
 
-            return { data: JSON.parse(data) };
-          }
+			            return { data: JSON.parse(data) };
+			        }
 				},
 				'update': {
 					method: 'PUT'

@@ -20,7 +20,10 @@
 				<p style="margin:0;height:30%;">{{product.description}}</p>
 				<div class="card__buttons" style="height:50%;margin:0;">
 					<h4 class="pull-left"><span class="badge badge-primary">${{product.price}}</span></h4>
-					<button class='btn btn--secondary fa fa-cog' ng-click="goTo('/organizations/'+slug_id+'/'+category_id+'/'+product.product_id+'/settings');"></button>
+					<div>
+						<button ng-click="duplicateResource(product)" class='btn btn--secondary fa fa-copy'></button>
+						<button class='btn btn--secondary fa fa-cog' ng-click="goTo('/organizations/'+slug_id+'/'+category_id+'/'+product.product_id+'/settings');"></button>
+					</div>
 				</div>
 	        </div>
         </div>

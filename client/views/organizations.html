@@ -25,7 +25,7 @@
 						<label style="display: flex; margin-left: 0;" for="toggle_{{$index}}" class="switch" ng-click=""></label>
 					</div>
 
-					<!--<a href="/organizations/{{org.slug_id}}/categories"><button class='btn btn--primary'>View</button></a>-->
+					<!--<button ng-click="createResource()" class='btn btn--primary fa fa-copy'></button>-->
 					<button ng-click="goTo('/organizations/' + org.slug_id + '/settings');$event.stopPropagation()" class='btn btn--secondary fa fa-cog'></button>
 				</div>
 	        </div>

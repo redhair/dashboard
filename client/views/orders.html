@@ -1,0 +1,25 @@
+<div ng-include="'partials/header.html'"></div>
+<div ng-include="'partials/sidebar.html'"></div>
+
+<div class="row equal innerContent">
+	<table class="table">
+		<thead>
+			<th scope="col">#</th>
+			<th scope="col">Name</th>
+			<th scope="col">Price</th>
+			<th scope="col">SKU</th>
+			<th scope="col">QTY</th>
+			<th scope="col">Size</th>
+		</thead>
+		<tbody ng-repeat='order in orders'>
+			<tr ng-repeat='product in products'>
+				<td>{{order.order_number}}</td>
+				<td>{{product.details.product_name}}</td>
+				<td>{{product.details.price}}</td>
+				<td>{{product.details.sku}}</td>
+				<td>{{product.quantity}}</td>
+				<td>{{product.size}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

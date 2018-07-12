@@ -280,6 +280,14 @@ h6 {
 	padding-top: 90px;
 	padding-left: 50px;
 	padding-right: 200px;
+	margin: 0;
+}
+
+.mappingOption {
+	display:flex;
+	width: 66%;
+	justify-content: space-between;
+	margin: auto;
 }
 
 .copied-msg {
@@ -341,7 +349,7 @@ h6 {
   width: 20px;
   height: 20px;
   margin: 0 8px;
-  background-color: #333;
+  background-color: #20386f;
 
   border-radius: 100%;
   display: inline-block;
@@ -428,6 +436,10 @@ h6 {
 	margin: 10px 10px 0 0;
 }
 
+.table td, .table th {
+	white-space: nowrap;
+}
+
 @media only screen and (max-width: 420px) {
 	
 }
@@ -440,5 +452,15 @@ h6 {
 	.innerContent {
 		padding-right: 50px;
 		padding-left: 50px;
+	}
+}
+
+@media print {
+	.sidebar, .header {
+		display: none;
+	}
+
+	.innerContent {
+		padding: 50px;
 	}
 }
